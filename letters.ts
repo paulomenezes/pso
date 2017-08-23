@@ -51,7 +51,7 @@ const evaluate = (position: Position) => {
     [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]
   );
 
-  const maxCount = 10;
+  const maxCount = 100;
   const size = input.length;
 
   let error = 0.0;
@@ -70,7 +70,7 @@ const evaluate = (position: Position) => {
     // Show progress
     values.push(error);
 
-    if (count % 5 === 0) {
+    if (count % 50 === 0) {
       console.log(`Epoch ${count} completed with error ${error}`);
     }
   } while (error > 0.1 && count <= maxCount);

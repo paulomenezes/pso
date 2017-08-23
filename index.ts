@@ -2,8 +2,8 @@ import { Particle } from './particle';
 import { Position } from './position';
 import { Velocity } from './velocity';
 
-const SWARM_SIZE = 30;
-const MAX_ITERATION = 50;
+const SWARM_SIZE = 50;
+const MAX_ITERATION = 100;
 const C1 = 2;
 const C2 = 2;
 const W_UPPERBOUND = 1.0;

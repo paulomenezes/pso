@@ -35,7 +35,7 @@ var evaluate = function (position) {
     var momentumTerm = Math.max(0, +position.z.toFixed(2));
     console.log(hiddenLayers, trainingRate, momentumTerm);
     var network = new back_propagation_1.BackPropagation([16, hiddenLayers, 26], [transfer_function_1.TransferFunction.NONE, transfer_function_1.TransferFunction.SIGMOID, transfer_function_1.TransferFunction.SIGMOID]);
-    var maxCount = 100;
+    var maxCount = 10;
     var size = input.length;
     var error = 0.0;
     var count = 0;
@@ -48,7 +48,7 @@ var evaluate = function (position) {
         error = error / size;
         // Show progress
         values.push(error);
-        if (count % 50 === 0) {
+        if (count % 5 === 0) {
             console.log("Epoch " + count + " completed with error " + error);
         }
     } while (error > 0.1 && count <= maxCount);
