@@ -6,18 +6,15 @@ export class Particle {
   velocity: Velocity;
   fitness: number;
 
-  getFitness() {
-    this.calculateFitness();
+  getFitness(evaluate: (position: Position) => number) {
+    this.calculateFitness(evaluate);
     return this.fitness;
   }
 
-  calculateFitness() {
+  calculateFitness(evaluate: (position: Position) => number) {
     const x = this.position.x;
     const y = this.position.y;
 
-    this.fitness =
-      Math.pow(2.8125 - x + x * Math.pow(y, 4), 2) +
-      Math.pow(2.25 - x + x * Math.pow(y, 2), 2) +
-      Math.pow(1.5 - x + x * y, 2);
+    this.fitness = evaluate(this.position);
   }
 }

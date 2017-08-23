@@ -2,23 +2,25 @@ import { Particle } from './particle';
 import { Position } from './position';
 import { Velocity } from './velocity';
 
-const SWARM_SIZE = 100;
-const MAX_ITERATION = 10000;
-const C1 = 2.0;
-const C2 = 2.0;
+const SWARM_SIZE = 30;
+const MAX_ITERATION = 50;
+const C1 = 2;
+const C2 = 2;
 const W_UPPERBOUND = 1.0;
 const W_LOWERBOUND = 0.0;
 
 const LOC_X_LOW = 1;
-const LOC_X_HIGH = 4;
-const LOC_Y_LOW = -1;
+const LOC_X_HIGH = 100;
+const LOC_Y_LOW = 0.001;
 const LOC_Y_HIGH = 1;
+const LOC_Z_LOW = 0;
+const LOC_Z_HIGH = 1;
 const VEL_LOW = -1;
 const VEL_HIGH = 1;
 
-const ERR_TOLERANCE = 0.001;
+const ERR_TOLERANCE = 0.1;
 
-class PSO {
+export class PSO {
   swarm: Particle[] = [];
   pBest: number[] = [];
   pBestLocation: Position[] = [];
@@ -28,7 +30,9 @@ class PSO {
 
   fitnessValueList: number[] = [];
 
-  constructor() {
+  constructor(evaluate: (position: Position) => number) {
+    this.evaluate = evaluate;
+
     this.execute();
   }
 
@@ -38,13 +42,15 @@ class PSO {
     for (var i = 0; i < SWARM_SIZE; i++) {
       const posX = LOC_X_LOW + Math.random() * LOC_X_HIGH - LOC_X_LOW;
       const posY = LOC_Y_LOW + Math.random() * LOC_Y_HIGH - LOC_Y_LOW;
+      const posZ = LOC_Z_LOW + Math.random() * LOC_Z_HIGH - LOC_Z_LOW;
 
       const velX = VEL_LOW + Math.random() * VEL_HIGH - VEL_LOW;
       const velY = VEL_LOW + Math.random() * VEL_HIGH - VEL_LOW;
+      const velZ = VEL_LOW + Math.random() * VEL_HIGH - VEL_LOW;
 
       particle = new Particle();
-      particle.position = new Position(posX, posY);
-      particle.velocity = new Velocity(velX, velY);
+      particle.position = new Position(posX, posY, posZ);
+      particle.velocity = new Velocity(velX, velY, velZ);
 
       this.swarm.push(particle);
     }
@@ -52,7 +58,7 @@ class PSO {
 
   updateFitness() {
     this.swarm.forEach((particle, index) => {
-      this.fitnessValueList[index] = particle.getFitness();
+      this.fitnessValueList[index] = particle.getFitness(this.evaluate);
     });
   }
 
@@ -71,16 +77,7 @@ class PSO {
   }
 
   evaluate(position: Position) {
-    let result = 0;
-    let x = position.x; // the "x" part of the location
-    let y = position.y; // the "y" part of the location
-
-    result =
-      Math.pow(2.8125 - x + x * Math.pow(y, 4), 2) +
-      Math.pow(2.25 - x + x * Math.pow(y, 2), 2) +
-      Math.pow(1.5 - x + x * y, 2);
-
-    return result;
+    return 0;
   }
 
   execute() {
@@ -132,34 +129,40 @@ class PSO {
           r1 * C1 * (this.pBestLocation[i].y - p.position.y) +
           r2 * C2 * (this.gBestLocation.y - p.position.y);
 
-        let velocity = new Velocity(newVel[0], newVel[1]);
+        newVel[2] =
+          w * p.velocity.z +
+          r1 * C1 * (this.pBestLocation[i].z - p.position.z) +
+          r2 * C2 * (this.gBestLocation.z - p.position.z);
+
+        let velocity = new Velocity(newVel[0], newVel[1], newVel[2]);
         p.velocity = velocity;
 
         // Update position
         let newPos = [];
-        newPos[0] = p.position.x - newVel[0];
-        newPos[1] = p.position.y - newVel[1];
+        newPos[0] = p.position.x + newVel[0];
+        newPos[1] = p.position.y + newVel[1];
+        newPos[2] = p.position.z + newVel[2];
 
-        let position = new Position(newPos[0], newPos[1]);
+        let position = new Position(newPos[0], newPos[1], newPos[2]);
         p.position = position;
       }
 
-      err = this.evaluate(this.gBestLocation) - 0;
+      err = this.evaluate(this.gBestLocation);
 
       console.log('Interation', t);
       console.log('Best X', this.gBestLocation.x);
       console.log('Best Y', this.gBestLocation.y);
-      console.log('Value', this.evaluate(this.gBestLocation));
+      console.log('Best Z', this.gBestLocation.z);
+      // console.log('Value', this.evaluate(this.gBestLocation));
 
       t++;
       this.updateFitness();
     }
 
     console.log('\nSolution found in interaction', t - 1);
-    console.log('Best X', this.gBestLocation.x);
-    console.log('Best Y', this.gBestLocation.y);
+    console.log('Hidden layers', this.gBestLocation.x);
+    console.log('Training rate', this.gBestLocation.y);
+    console.log('Momentum', this.gBestLocation.z);
     console.log('Error', err);
   }
 }
-
-new PSO();

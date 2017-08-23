@@ -4,7 +4,9 @@
   "description": "PSO Algorithm in Typescript",
   "main": "index.js",
   "scripts": {
-    "start": "tsc ./index.ts && node ./index.js"
+    "start": "tsc ./index.ts && node ./index.js",
+    "cancer": "tsc ./cancer.ts && node ./cancer.js",
+    "letters": "tsc ./letters.ts && node ./letters.js"
   },
   "repository": {
     "type": "git",
