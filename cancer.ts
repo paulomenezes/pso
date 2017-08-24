@@ -1,5 +1,5 @@
 import { Position } from './position';
-import { PSO } from './index';
+import { PSO } from './pso';
 
 import { BackPropagation } from './mlp/back-propagation';
 import { TransferFunction } from './mlp/transfer-function';
@@ -52,10 +52,7 @@ const evaluate = (position: Position) => {
   const momentumTerm = +position.z.toFixed(2);
   console.log(hiddenLayers, trainingRate, momentumTerm);
 
-  let network = new BackPropagation(
-    [9, hiddenLayers, 2],
-    [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]
-  );
+  let network = new BackPropagation([9, hiddenLayers, 2], [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]);
 
   const maxCount = 500;
   const size = input.length;

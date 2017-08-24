@@ -2,10 +2,10 @@ import { Particle } from './particle';
 import { Position } from './position';
 import { Velocity } from './velocity';
 
-const SWARM_SIZE = 50;
-const MAX_ITERATION = 100;
-const C1 = 2;
-const C2 = 2;
+const SWARM_SIZE = 20;
+const MAX_ITERATION = 15;
+const C1 = 1.496;
+const C2 = 1.496;
 const W_UPPERBOUND = 1.0;
 const W_LOWERBOUND = 0.0;
 
@@ -109,7 +109,7 @@ export class PSO {
         this.gBestLocation = this.swarm[bestParticleIndex].position;
       }
 
-      w = W_UPPERBOUND - t / MAX_ITERATION * (W_UPPERBOUND - W_LOWERBOUND);
+      w = 0.7298; // W_UPPERBOUND - t / MAX_ITERATION * (W_UPPERBOUND - W_LOWERBOUND);
 
       for (let i = 0; i < SWARM_SIZE; i++) {
         let r1 = Math.random();
@@ -119,20 +119,11 @@ export class PSO {
 
         // Update velocity
         let newVel = [];
-        newVel[0] =
-          w * p.velocity.x +
-          r1 * C1 * (this.pBestLocation[i].x - p.position.x) +
-          r2 * C2 * (this.gBestLocation.x - p.position.x);
+        newVel[0] = w * p.velocity.x + r1 * C1 * (this.pBestLocation[i].x - p.position.x) + r2 * C2 * (this.gBestLocation.x - p.position.x);
 
-        newVel[1] =
-          w * p.velocity.y +
-          r1 * C1 * (this.pBestLocation[i].y - p.position.y) +
-          r2 * C2 * (this.gBestLocation.y - p.position.y);
+        newVel[1] = w * p.velocity.y + r1 * C1 * (this.pBestLocation[i].y - p.position.y) + r2 * C2 * (this.gBestLocation.y - p.position.y);
 
-        newVel[2] =
-          w * p.velocity.z +
-          r1 * C1 * (this.pBestLocation[i].z - p.position.z) +
-          r2 * C2 * (this.gBestLocation.z - p.position.z);
+        newVel[2] = w * p.velocity.z + r1 * C1 * (this.pBestLocation[i].z - p.position.z) + r2 * C2 * (this.gBestLocation.z - p.position.z);
 
         let velocity = new Velocity(newVel[0], newVel[1], newVel[2]);
         p.velocity = velocity;

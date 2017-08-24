@@ -3,10 +3,10 @@ exports.__esModule = true;
 var particle_1 = require("./particle");
 var position_1 = require("./position");
 var velocity_1 = require("./velocity");
-var SWARM_SIZE = 10;
-var MAX_ITERATION = 20;
-var C1 = 2;
-var C2 = 2;
+var SWARM_SIZE = 20;
+var MAX_ITERATION = 15;
+var C1 = 1.496;
+var C2 = 1.496;
 var W_UPPERBOUND = 1.0;
 var W_LOWERBOUND = 0.0;
 var LOC_X_LOW = 1;
@@ -86,25 +86,16 @@ var PSO = (function () {
                 this.gBest = this.fitnessValueList[bestParticleIndex];
                 this.gBestLocation = this.swarm[bestParticleIndex].position;
             }
-            w = W_UPPERBOUND - t / MAX_ITERATION * (W_UPPERBOUND - W_LOWERBOUND);
+            w = 0.7298; // W_UPPERBOUND - t / MAX_ITERATION * (W_UPPERBOUND - W_LOWERBOUND);
             for (var i_1 = 0; i_1 < SWARM_SIZE; i_1++) {
                 var r1 = Math.random();
                 var r2 = Math.random();
                 var p = this.swarm[i_1];
                 // Update velocity
                 var newVel = [];
-                newVel[0] =
-                    w * p.velocity.x +
-                        r1 * C1 * (this.pBestLocation[i_1].x - p.position.x) +
-                        r2 * C2 * (this.gBestLocation.x - p.position.x);
-                newVel[1] =
-                    w * p.velocity.y +
-                        r1 * C1 * (this.pBestLocation[i_1].y - p.position.y) +
-                        r2 * C2 * (this.gBestLocation.y - p.position.y);
-                newVel[2] =
-                    w * p.velocity.z +
-                        r1 * C1 * (this.pBestLocation[i_1].z - p.position.z) +
-                        r2 * C2 * (this.gBestLocation.z - p.position.z);
+                newVel[0] = w * p.velocity.x + r1 * C1 * (this.pBestLocation[i_1].x - p.position.x) + r2 * C2 * (this.gBestLocation.x - p.position.x);
+                newVel[1] = w * p.velocity.y + r1 * C1 * (this.pBestLocation[i_1].y - p.position.y) + r2 * C2 * (this.gBestLocation.y - p.position.y);
+                newVel[2] = w * p.velocity.z + r1 * C1 * (this.pBestLocation[i_1].z - p.position.z) + r2 * C2 * (this.gBestLocation.z - p.position.z);
                 var velocity = new velocity_1.Velocity(newVel[0], newVel[1], newVel[2]);
                 p.velocity = velocity;
                 // Update position

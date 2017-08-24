@@ -1,5 +1,5 @@
 import { Position } from './position';
-import { PSO } from './index';
+import { PSO } from './pso';
 
 import { BackPropagation } from './mlp/back-propagation';
 import { TransferFunction } from './mlp/transfer-function';
@@ -33,7 +33,7 @@ const readFile = (name: string) => {
   return [input, output];
 };
 
-const trainingData = readFile('./mlp/data/training.txt');
+const trainingData = readFile('./data/letter.small.txt');
 
 const evaluate = (position: Position) => {
   let values: number[] = [];
@@ -41,15 +41,12 @@ const evaluate = (position: Position) => {
   let input: number[][] = trainingData[0];
   let output: number[][] = trainingData[1];
 
-  const hiddenLayers = Math.max(0, Math.round(position.x));
+  const hiddenLayers = Math.max(1, Math.round(position.x));
   const trainingRate = Math.max(0, +position.y.toFixed(2));
   const momentumTerm = Math.max(0, +position.z.toFixed(2));
   console.log(hiddenLayers, trainingRate, momentumTerm);
 
-  let network = new BackPropagation(
-    [16, hiddenLayers, 26],
-    [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]
-  );
+  let network = new BackPropagation([16, hiddenLayers, 26], [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]);
 
   const maxCount = 100;
   const size = input.length;

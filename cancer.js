@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-var index_1 = require("./index");
+var pso_1 = require("./pso");
 var back_propagation_1 = require("./mlp/back-propagation");
 var transfer_function_1 = require("./mlp/transfer-function");
 var fs = require("fs");
@@ -60,4 +60,4 @@ var evaluate = function (position) {
     } while (error > 0.1 && count <= maxCount);
     return error;
 };
-new index_1.PSO(evaluate);
+new pso_1.PSO(evaluate);
