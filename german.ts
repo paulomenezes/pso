@@ -18,7 +18,7 @@ const readFile = (name: string) => {
       inputLine.push(+value);
     });
 
-    if (inputLine.length === 9) {
+    if (inputLine.length === 18) {
       input.push(inputLine);
 
       let outputLine: number[] = [];
@@ -40,11 +40,7 @@ const readFile = (name: string) => {
   return [input, output];
 };
 
-const trainingData = readFile('./mlp/data/training.breast.txt');
-
-const evaluate2 = (position: Position) => {
-  return evaluate([position.x, position.y, position.z]);
-};
+const trainingData = readFile('./data/german.training.txt');
 
 const evaluate = (position: number[]) => {
   let values: number[] = [];
@@ -55,9 +51,8 @@ const evaluate = (position: number[]) => {
   const hiddenLayers = Math.round(position[0]);
   const trainingRate = +position[1].toFixed(2);
   const momentumTerm = +position[2].toFixed(2);
-  // console.log(hiddenLayers, trainingRate, momentumTerm);
 
-  let network = new BackPropagation([9, hiddenLayers, 2], [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]);
+  let network = new BackPropagation([18, hiddenLayers, 2], [TransferFunction.NONE, TransferFunction.SIGMOID, TransferFunction.SIGMOID]);
 
   const maxCount = 100;
   const size = input.length;
@@ -82,15 +77,10 @@ const evaluate = (position: number[]) => {
     //console.log(`Epoch ${count} completed with error ${error}`);
     //}
   } while (error > 0.1 && count <= maxCount);
+  console.log(error, hiddenLayers, trainingRate, momentumTerm);
 
   return error;
 };
 
-console.time('pso');
-const pso = new PSO(evaluate2);
-pso.execute();
-console.timeEnd('pso');
-
-console.time('ga');
+// new PSO(evaluate);
 new Genetic(evaluate);
-console.timeEnd('ga');

@@ -4,7 +4,7 @@ var particle_1 = require("./particle");
 var position_1 = require("./position");
 var velocity_1 = require("./velocity");
 var SWARM_SIZE = 20;
-var MAX_ITERATION = 15;
+var MAX_ITERATION = 100;
 var C1 = 1.496;
 var C2 = 1.496;
 var W_UPPERBOUND = 1.0;
@@ -25,7 +25,6 @@ var PSO = (function () {
         this.pBestLocation = [];
         this.fitnessValueList = [];
         this.evaluate = evaluate;
-        this.execute();
     }
     PSO.prototype.initializeSwam = function () {
         var particle;
@@ -107,10 +106,10 @@ var PSO = (function () {
                 p.position = position;
             }
             err = this.evaluate(this.gBestLocation);
-            console.log('Interation', t);
-            console.log('Best X', this.gBestLocation.x);
-            console.log('Best Y', this.gBestLocation.y);
-            console.log('Best Z', this.gBestLocation.z);
+            // console.log('Interation', t);
+            // console.log('Best X', this.gBestLocation.x);
+            // console.log('Best Y', this.gBestLocation.y);
+            // console.log('Best Z', this.gBestLocation.z);
             // console.log('Value', this.evaluate(this.gBestLocation));
             t++;
             this.updateFitness();
@@ -120,6 +119,7 @@ var PSO = (function () {
         console.log('Training rate', this.gBestLocation.y);
         console.log('Momentum', this.gBestLocation.z);
         console.log('Error', err);
+        return this.gBestLocation;
     };
     return PSO;
 }());

@@ -3,7 +3,7 @@ import { Position } from './position';
 import { Velocity } from './velocity';
 
 const SWARM_SIZE = 20;
-const MAX_ITERATION = 15;
+const MAX_ITERATION = 100;
 const C1 = 1.496;
 const C2 = 1.496;
 const W_UPPERBOUND = 1.0;
@@ -32,8 +32,6 @@ export class PSO {
 
   constructor(evaluate: (position: Position) => number) {
     this.evaluate = evaluate;
-
-    this.execute();
   }
 
   initializeSwam() {
@@ -140,10 +138,10 @@ export class PSO {
 
       err = this.evaluate(this.gBestLocation);
 
-      console.log('Interation', t);
-      console.log('Best X', this.gBestLocation.x);
-      console.log('Best Y', this.gBestLocation.y);
-      console.log('Best Z', this.gBestLocation.z);
+      // console.log('Interation', t);
+      // console.log('Best X', this.gBestLocation.x);
+      // console.log('Best Y', this.gBestLocation.y);
+      // console.log('Best Z', this.gBestLocation.z);
       // console.log('Value', this.evaluate(this.gBestLocation));
 
       t++;
@@ -155,5 +153,7 @@ export class PSO {
     console.log('Training rate', this.gBestLocation.y);
     console.log('Momentum', this.gBestLocation.z);
     console.log('Error', err);
+
+    return this.gBestLocation;
   }
 }

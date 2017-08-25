@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-var pso_1 = require("./pso");
 var genetic_1 = require("./genetic");
 var back_propagation_1 = require("./mlp/back-propagation");
 var transfer_function_1 = require("./mlp/transfer-function");
@@ -14,7 +13,7 @@ var readFile = function (name) {
         line.substr(0, line.length - 3).split(',').forEach(function (value) {
             inputLine.push(+value);
         });
-        if (inputLine.length === 9) {
+        if (inputLine.length === 18) {
             input.push(inputLine);
             var outputLine = [];
             for (var i = 0; i < 2; i++) {
@@ -32,10 +31,7 @@ var readFile = function (name) {
     });
     return [input, output];
 };
-var trainingData = readFile('./mlp/data/training.breast.txt');
-var evaluate2 = function (position) {
-    return evaluate([position.x, position.y, position.z]);
-};
+var trainingData = readFile('./data/german.training.txt');
 var evaluate = function (position) {
     var values = [];
     var input = trainingData[0];
@@ -43,8 +39,7 @@ var evaluate = function (position) {
     var hiddenLayers = Math.round(position[0]);
     var trainingRate = +position[1].toFixed(2);
     var momentumTerm = +position[2].toFixed(2);
-    // console.log(hiddenLayers, trainingRate, momentumTerm);
-    var network = new back_propagation_1.BackPropagation([9, hiddenLayers, 2], [transfer_function_1.TransferFunction.NONE, transfer_function_1.TransferFunction.SIGMOID, transfer_function_1.TransferFunction.SIGMOID]);
+    var network = new back_propagation_1.BackPropagation([18, hiddenLayers, 2], [transfer_function_1.TransferFunction.NONE, transfer_function_1.TransferFunction.SIGMOID, transfer_function_1.TransferFunction.SIGMOID]);
     var maxCount = 100;
     var size = input.length;
     var error = 0.0;
@@ -62,12 +57,8 @@ var evaluate = function (position) {
         //console.log(`Epoch ${count} completed with error ${error}`);
         //}
     } while (error > 0.1 && count <= maxCount);
+    console.log(error, hiddenLayers, trainingRate, momentumTerm);
     return error;
 };
-console.time('pso');
-var pso = new pso_1.PSO(evaluate2);
-pso.execute();
-console.timeEnd('pso');
-console.time('ga');
+// new PSO(evaluate);
 new genetic_1.Genetic(evaluate);
-console.timeEnd('ga');

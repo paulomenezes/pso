@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsc ./index.ts && node ./index.js",
     "cancer": "tsc ./cancer.ts && node ./cancer.js",
-    "letters": "tsc ./letters.ts && node ./letters.js"
+    "letters": "tsc ./letters.ts && node ./letters.js",
+    "german": "tsc ./german.ts && node ./german.js"
   },
   "repository": {
     "type": "git",
